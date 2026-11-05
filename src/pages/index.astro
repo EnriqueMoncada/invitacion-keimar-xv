@@ -88,19 +88,19 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
       section { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2.6rem 1.4rem; }
       /* Solo portada y cierre ocupan toda la pantalla */
       section.full { min-height: 100svh; }
-      .overline { font-family: var(--sans); font-weight: 300; letter-spacing: 0.4em; text-transform: uppercase; font-size: 0.68rem; color: var(--plata-suave); }
+      .overline { font-family: var(--sans); font-weight: 400; letter-spacing: 0.4em; text-transform: uppercase; font-size: 0.68rem; color: #d9c2ff; text-shadow: 0 0 12px rgba(160,110,255,.5); }
       .linea { width: 120px; height: 1px; background: linear-gradient(90deg, transparent, #d5d5df, transparent); margin: 1.5rem auto; }
       .script { font-family: var(--script); }
 
-      /* ✨ Texto neón como la referencia */
+      /* ✨ Texto neón — lavanda violeta para que resalte y no se pierda con el blanco */
       .neon {
         font-family: var(--script);
-        color: var(--brillo);
+        color: #e9d6ff;
         text-shadow:
-          0 0 6px rgba(255,255,255,0.9),
-          0 0 18px rgba(220,225,255,0.55),
-          0 0 42px rgba(180,190,255,0.35),
-          0 0 80px rgba(150,160,255,0.18);
+          0 0 6px rgba(190,140,255,0.95),
+          0 0 18px rgba(150,95,255,0.6),
+          0 0 42px rgba(130,80,255,0.4),
+          0 0 80px rgba(110,65,255,0.22);
       }
       .btn {
         display: inline-flex; align-items: center; gap: 0.55rem;
@@ -221,7 +221,7 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
         border: 1px solid rgba(255,255,255,0.18);
         background: rgba(255,255,255,0.05);
       }
-      .mini-card h3 { font-family: var(--serif); font-size: 1.3rem; color: var(--brillo); margin: .8rem 0 .5rem; }
+      .mini-card h3 { font-family: var(--serif); font-size: 1.3rem; color: #e3c9ff; text-shadow: 0 0 14px rgba(150,95,255,.45); margin: .8rem 0 .5rem; }
       .mini-card > p, .mini-card .banco-box, .mini-card .vest-lista { position: relative; z-index: 2; }
 
       /* 👑 Medallón de corona (sección deseleccionada y completa, sin cortes) */
@@ -518,10 +518,7 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
             <img src={datos.fotoPortada} alt={datos.nombre} style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />
           </div>
         </div>
-
-        <a href="#contador" id="btnAbrirInvitacion" class="btn relleno" style="margin-top:3rem; color:#0a0a0a;">Ver invitación ↓</a>
       </div>
-      <span class="desliza" style="z-index:2;">Toca para abrir</span>
     </section>
 
     <!-- ============ 1.5 REPRODUCTOR DE MÚSICA ============ -->
@@ -589,7 +586,7 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
           Con ilusión y alegría, celebro mis quince años, rodeada de las personas más especiales de mi vida.
         </p>
 
-        <h2 class="reveal" style="font-family:var(--serif); font-size:1.7rem; margin-top:2rem; color:var(--brillo); text-shadow:0 0 16px rgba(255,255,255,.35);">
+        <h2 class="reveal" style="font-family:var(--serif); font-size:1.7rem; margin-top:2rem; color:#e9d6ff; text-shadow:0 0 16px rgba(150,95,255,.5);">
           {datos.lugar}
         </h2>
         <p class="reveal" style="margin-top:.8rem; color:var(--plata-suave); font-size:.95rem; line-height:1.6;">
@@ -614,11 +611,11 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
           "Acompáñame a celebrar mis XV años y hagamos esta noche inolvidable"
         </p>
         <div class="linea reveal"></div>
-        <p class="overline reveal">Con la bendición de Dios y de</p>
+        <p class="overline reveal">Con la bendición de Dios y de mis padres</p>
         <img src="/assets/corona.png" alt="" aria-hidden="true" class="corona-sello" />
-        <h3 class="reveal" style="margin-top:1.6rem; font-size:1.6rem; font-weight:600; color:var(--brillo); text-shadow:0 0 14px rgba(255,255,255,.4);">{datos.padres[0]}</h3>
+        <h3 class="reveal" style="margin-top:1.6rem; font-size:1.6rem; font-weight:600; color:#e9d6ff; text-shadow:0 0 18px rgba(150,95,255,.55);">{datos.padres[0]}</h3>
         <p class="reveal" style="color:var(--plata-suave); margin:.2rem 0;">&</p>
-        <h3 class="reveal" style="font-size:1.6rem; font-weight:600; color:var(--brillo); text-shadow:0 0 14px rgba(255,255,255,.4);">{datos.padres[1]}</h3>
+        <h3 class="reveal" style="font-size:1.6rem; font-weight:600; color:#e9d6ff; text-shadow:0 0 18px rgba(150,95,255,.55);">{datos.padres[1]}</h3>
       </div>
     </section>
 
