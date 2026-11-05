@@ -1,20 +1,46 @@
-// Post-build para GitHub Pages (proyecto servido bajo /invitacion-keimar-xv/):
-// - vuelve relativas las rutas /_astro/ que Astro emite en dist/index.html
+// Post-build para GitHub Pages / Netlify:
+// - vuelve relativas las rutas /_astro/ que Astro emite en todos los archivos HTML
 // - crea .nojekyll para que Pages no ignore la carpeta _astro/
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const dist = "dist";
-const index = join(dist, "index.html");
-let html = readFileSync(index, "utf8");
 
-const antes = html;
-html = html.replaceAll('"/_astro/', '"_astro/').replaceAll("'/_astro/", "'_astro/");
+function getHtmlFiles(dir) {
+  let results = [];
+  const list = readdirSync(dir);
+  for (const file of list) {
+    const fullPath = join(dir, file);
+    const stat = statSync(fullPath);
+    if (stat && stat.isDirectory()) {
+      results = results.concat(getHtmlFiles(fullPath));
+    } else if (file.endsWith(".html")) {
+      results.push(fullPath);
+    }
+  }
+  return results;
+}
 
-writeFileSync(index, html, "utf8");
+const htmlFiles = getHtmlFiles(dist);
+let totalCambios = 0;
 
-// .nojekyll: evita que Jekyll de GH Pages filtre carpetas que empiezan con _ _
+for (const filePath of htmlFiles) {
+  const content = readFileSync(filePath, "utf8");
+  // Si está en una subcarpeta (ej. dist/fotos/index.html), la ruta relativa a _astro es ../_astro/
+  const relativeDepth = filePath.replace(dist, "").split(/[\\/]/).filter(Boolean).length - 1;
+  const prefix = relativeDepth > 0 ? "../".repeat(relativeDepth) + "_astro/" : "_astro/";
+  
+  const nuevo = content
+    .replaceAll('"/_astro/', `"${prefix}`)
+    .replaceAll("'/_astro/", `'${prefix}`);
+    
+  if (nuevo !== content) {
+    writeFileSync(filePath, nuevo, "utf8");
+    totalCambios++;
+  }
+}
+
+// .nojekyll: evita que Jekyll de GH Pages filtre carpetas que empiezan con _
 writeFileSync(join(dist, ".nojekyll"), "");
 
-const cambios = antes.length !== html.length;
-console.log("[relativize] rutas ajustadas:", cambios, "| .nojekyll creado");
+console.log(`[relativize] ${totalCambios} archivo(s) HTML ajustados | .nojekyll creado`);

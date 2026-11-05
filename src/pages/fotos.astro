@@ -1,0 +1,663 @@
+---
+/* ============================================================
+   MURO DE FOTOS DEDICADO — XV AÑOS KEIMAR DE LOS ÁNGELES
+   Ruta: /fotos (ej. https://dreamy-licorice-d1c726.netlify.app/fotos)
+   ============================================================ */
+const datos = {
+  nombre: "Keimar de Los Ángeles",
+  apiGaleria: "https://script.google.com/macros/s/AKfycbxqjxBeva7lbRJaQVJWsZ4YryAYE8ycbOgoJZUpk48hXA1Md__Jp6q-ZP6Gd4y26zJz/exec",
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#141018" />
+    <title>Muro de Fotos — Mis XV Años {datos.nombre} ✨</title>
+    <meta name="description" content={`Comparte y mira en vivo las fotos de los XV años de ${datos.nombre}`} />
+
+    <!-- Iconos Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <style is:global>
+      @import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap");
+
+      :root {
+        --negro: #141018;
+        --panel: #201b26;
+        --plata: #e8e8ec;
+        --plata-suave: #b9b9c2;
+        --morado: #6a577a;
+        --brillo: #ffffff;
+        --serif: "Playfair Display", serif;
+        --script: "Great Vibes", cursive;
+        --sans: "Montserrat", sans-serif;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        background: var(--negro);
+        color: var(--plata);
+        font-family: var(--serif);
+        overflow-x: hidden;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Partículas flotantes */
+      .polvo {
+        position: fixed; inset: 0; pointer-events: none; z-index: 1;
+        background-image:
+          radial-gradient(1.5px 1.5px at 12% 22%, rgba(255,255,255,.7) 50%, transparent 51%),
+          radial-gradient(1px 1px at 34% 68%, rgba(255,255,255,.5) 50%, transparent 51%),
+          radial-gradient(2px 2px at 58% 12%, rgba(255,255,255,.65) 50%, transparent 51%),
+          radial-gradient(1px 1px at 74% 44%, rgba(255,255,255,.45) 50%, transparent 51%),
+          radial-gradient(1.5px 1.5px at 88% 76%, rgba(255,255,255,.6) 50%, transparent 51%);
+        animation: parpadeo 5s ease-in-out infinite alternate;
+      }
+      @keyframes parpadeo { from { opacity: .35; } to { opacity: .9; } }
+
+      .overline {
+        font-family: var(--sans); font-weight: 400; letter-spacing: 0.35em;
+        text-transform: uppercase; font-size: 0.7rem; color: #d9c2ff;
+        text-shadow: 0 0 12px rgba(160,110,255,.5);
+      }
+      .linea {
+        width: 120px; height: 1px;
+        background: linear-gradient(90deg, transparent, #d5d5df, transparent);
+        margin: 1.2rem auto;
+      }
+      .script { font-family: var(--script); }
+
+      .neon {
+        font-family: var(--script);
+        color: #e9d6ff;
+        text-shadow:
+          0 0 6px rgba(190,140,255,0.95),
+          0 0 18px rgba(150,95,255,0.6),
+          0 0 42px rgba(130,80,255,0.4);
+      }
+
+      /* Barra de navegación superior */
+      .top-nav {
+        position: sticky; top: 0; z-index: 50;
+        width: 100%;
+        background: rgba(20, 16, 24, 0.88);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.12);
+        padding: 0.8rem 1.2rem;
+        display: flex; align-items: center; justify-content: space-between;
+      }
+      .nav-link {
+        display: inline-flex; align-items: center; gap: 0.45rem;
+        font-family: var(--sans); font-size: 0.76rem; letter-spacing: 0.15em;
+        text-transform: uppercase; color: var(--plata); text-decoration: none;
+        padding: 0.45rem 1rem; border-radius: 999px;
+        background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.2);
+        transition: all 0.25s ease;
+      }
+      .nav-link:hover {
+        background: rgba(255,255,255,0.16); color: var(--brillo);
+        box-shadow: 0 0 16px rgba(255,255,255,0.25);
+      }
+
+      .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem;
+        font-family: var(--sans); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+        color: var(--brillo); text-decoration: none;
+        padding: 0.9rem 2rem; border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.55);
+        background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+        box-shadow: 0 0 22px rgba(255,255,255,0.14);
+        cursor: pointer; transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+      .btn:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(255,255,255,0.3); }
+      .btn.relleno { background: linear-gradient(135deg, #f5f5fa, #c9c9d6); color: #0a0a0a; border: none; font-weight: 600; }
+
+      /* Contenedor principal */
+      .contenedor {
+        position: relative; z-index: 2;
+        width: min(94vw, 920px);
+        margin: 2rem auto 4rem;
+        padding: 0 1rem;
+        display: flex; flex-direction: column; align-items: center; text-align: center;
+      }
+
+      .tarjeta-fotos {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        padding: 2.8rem 1.6rem;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.18);
+        box-shadow: 0 0 46px rgba(255,255,255,0.08), inset 0 0 24px rgba(255,255,255,0.05);
+        background: linear-gradient(180deg, rgba(32,27,38,0.92) 0%, rgba(20,16,24,0.97) 100%);
+      }
+      @media (min-width: 640px) {
+        .tarjeta-fotos { padding: 3.5rem 2.8rem; }
+      }
+
+      .corona-sello {
+        display: block; width: 80px; margin: 1rem auto 0.4rem;
+        border-radius: 50%;
+        border: 2px solid rgba(255,255,255,.55);
+        box-shadow: 0 0 26px rgba(255,255,255,.4), 0 0 50px rgba(106,87,122,.6);
+      }
+
+      .vest-badge {
+        display: inline-block; font-family: var(--sans); font-size: .68rem; letter-spacing: .2em; text-transform: uppercase;
+        color: var(--brillo); padding: .35rem 1.1rem; border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.4); background: rgba(255,255,255,0.08);
+      }
+
+      /* Zona de subida */
+      .upload-container {
+        padding: 1.8rem 1.4rem; border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px dashed rgba(233, 214, 255, 0.4);
+        box-shadow: inset 0 0 26px rgba(106, 87, 122, 0.2);
+        display: flex; flex-direction: column; align-items: center; gap: 1rem;
+        margin: 2rem 0;
+        width: 100%;
+      }
+      .input-autor {
+        width: min(340px, 92%);
+        padding: 0.75rem 1.2rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        background: rgba(20, 16, 24, 0.85);
+        color: var(--brillo);
+        font-family: var(--sans); font-size: 0.85rem;
+        text-align: center; outline: none;
+        transition: border-color 0.25s, box-shadow 0.25s;
+      }
+      .input-autor:focus {
+        border-color: #d9c2ff;
+        box-shadow: 0 0 16px rgba(190, 140, 255, 0.5);
+      }
+      .input-autor::placeholder {
+        color: var(--plata-suave); font-size: 0.78rem;
+      }
+
+      /* Cuadrícula de fotos */
+      .galeria-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 0.85rem;
+        width: 100%;
+        margin-top: 1.4rem;
+      }
+      @media (min-width: 600px) {
+        .galeria-grid {
+          grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+          gap: 1.1rem;
+        }
+      }
+      .galeria-item {
+        position: relative;
+        aspect-ratio: 1 / 1;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.04);
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .galeria-item:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 0 24px rgba(190, 140, 255, 0.55);
+        border-color: rgba(233, 214, 255, 0.7);
+      }
+      .galeria-item img {
+        width: 100%; height: 100%; object-fit: cover; display: block;
+        transition: transform 0.4s ease;
+      }
+      .galeria-item:hover img { transform: scale(1.06); }
+      .galeria-item .autor-tag {
+        position: absolute; bottom: 0; left: 0; right: 0;
+        padding: 0.45rem 0.5rem;
+        background: linear-gradient(180deg, transparent, rgba(12, 9, 16, 0.9));
+        font-family: var(--sans); font-size: 0.68rem;
+        color: #f0e6ff; text-align: center;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+
+      .galeria-estado {
+        font-family: var(--sans); font-size: 0.85rem;
+        letter-spacing: 0.1em; color: var(--plata-suave);
+        padding: 2rem 0; text-align: center;
+      }
+
+      /* Paginador */
+      .galeria-paginador {
+        display: flex; align-items: center; justify-content: center;
+        gap: 0.5rem; margin-top: 2rem; flex-wrap: wrap;
+      }
+      .pag-btn {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--plata); background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        padding: 0.45rem 1rem; border-radius: 999px; cursor: pointer;
+        transition: all 0.25s ease;
+      }
+      .pag-btn:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.16); color: var(--brillo);
+        box-shadow: 0 0 14px rgba(255, 255, 255, 0.25); transform: translateY(-2px);
+      }
+      .pag-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; }
+      .pag-numeros { display: flex; gap: 0.35rem; align-items: center; }
+      .pag-num {
+        width: 36px; height: 36px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-family: var(--sans); font-size: 0.8rem; font-weight: 500;
+        color: var(--plata-suave); background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        cursor: pointer; transition: all 0.25s ease;
+      }
+      .pag-num:hover { color: #fff; background: rgba(255, 255, 255, 0.15); }
+      .pag-num.activo {
+        color: #fff;
+        background: linear-gradient(135deg, rgba(233, 214, 255, 0.35), rgba(150, 95, 255, 0.4));
+        border-color: #e9d6ff; box-shadow: 0 0 16px rgba(190, 140, 255, 0.6);
+        font-weight: 600;
+      }
+      .pag-contador {
+        font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.15em;
+        text-transform: uppercase; color: var(--plata-suave); margin-top: 0.9rem; text-align: center;
+      }
+
+      /* Lightbox visor */
+      .lightbox-modal {
+        position: fixed; inset: 0; z-index: 100;
+        background: rgba(10, 7, 14, 0.95);
+        backdrop-filter: blur(14px);
+        display: none; flex-direction: column;
+        align-items: center; justify-content: center;
+        padding: 1.2rem;
+      }
+      .lightbox-modal.activo { display: flex; animation: fadeIn 0.25s ease; }
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      .lightbox-cerrar {
+        position: absolute; top: 1.2rem; right: 1.4rem;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #fff; width: 44px; height: 44px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.4rem; cursor: pointer;
+        transition: background 0.2s, transform 0.2s; z-index: 102;
+      }
+      .lightbox-cerrar:hover { background: rgba(255, 255, 255, 0.25); transform: scale(1.08); }
+      .lightbox-img {
+        max-width: min(94vw, 900px); max-height: 78vh;
+        border-radius: 12px; border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 0 44px rgba(150, 95, 255, 0.45);
+        object-fit: contain;
+      }
+      .lightbox-acciones {
+        margin-top: 1rem; display: flex; gap: 0.8rem;
+      }
+      .disco-giro { display: inline-block; animation: giro 3s linear infinite; }
+      @keyframes giro { to { transform: rotate(360deg); } }
+    </style>
+  </head>
+  <body>
+    <div class="polvo"></div>
+
+    <!-- Barra superior -->
+    <header class="top-nav">
+      <a href="../" class="nav-link">
+        <i class="bi bi-chevron-left"></i> <span>Invitación</span>
+      </a>
+      <span class="overline" style="font-size:0.62rem;">Álbum en Vivo</span>
+      <button type="button" id="btnIrSubir" class="nav-link" style="color:#e9d6ff; border-color:rgba(233,214,255,0.4);">
+        <i class="bi bi-camera-fill"></i> <span>Subir</span>
+      </button>
+    </header>
+
+    <main class="contenedor">
+      <div class="tarjeta-fotos">
+        <p class="overline">Recuerdos Inolvidables</p>
+        <img src="../assets/corona.png" alt="" aria-hidden="true" class="corona-sello" />
+        <div class="linea"></div>
+
+        <h1 class="neon" style="font-size: clamp(2.4rem, 8vw, 4rem); line-height: 1.15; font-weight: 400;">
+          Muro de Fotos & Recuerdos
+        </h1>
+        <p style="font-family:var(--sans); font-size:0.85rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--brillo); margin-top:0.6rem;">
+          XV Años · {datos.nombre}
+        </p>
+        <p style="color:var(--plata-suave); max-width:48ch; margin:1rem auto 0; font-style:italic; font-size:0.95rem; line-height:1.6;">
+          ¡Inmortaliza esta noche! Sube tus selfies, fotos y recuerdos del evento para compartirlos con todos en tiempo real.
+        </p>
+
+        <!-- Zona para subir fotos -->
+        <div class="upload-container" id="zonaSubida">
+          <input type="file" id="inputFoto" accept="image/*" style="display:none;" />
+          <input type="text" id="inputAutor" class="input-autor" placeholder="Tu nombre o dedicatoria (opcional)" maxlength="40" />
+
+          <button type="button" class="btn relleno" id="btnSubirFoto" style="color:#0a0a0a;">
+            <i class="bi bi-camera-fill me-1"></i> Tomar o Subir Foto
+          </button>
+          <small style="font-family:var(--sans); font-size:.7rem; letter-spacing:.12em; color:var(--plata-suave);">
+            Las fotos se sincronizan directamente con el álbum oficial ✨
+          </small>
+
+          <!-- Mensajes de estado -->
+          <div id="subiendoMsg" style="display:none; color:#e9d6ff; font-family:var(--sans); font-size:.84rem; letter-spacing:.1em; animation:parpadeo 1.2s infinite alternate;">
+            <i class="bi bi-arrow-repeat me-1 disco-giro"></i> <span id="subiendoTexto">Optimizando imagen...</span>
+          </div>
+          <div id="exitoMsg" style="display:none; color:#9fffb0; font-family:var(--sans); font-size:.84rem; letter-spacing:.1em;">
+            <i class="bi bi-check-circle-fill me-1"></i> ¡Foto compartida con éxito! Ya puedes verla en el muro. 🎉
+          </div>
+        </div>
+
+        <!-- Cabecera de la galería -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2rem; padding:0 .4rem;">
+          <span class="vest-badge"><i class="bi bi-images me-1"></i> Recuerdos del Evento</span>
+          <button type="button" id="btnRecargarGaleria" style="background:none; border:none; color:var(--plata-suave); font-family:var(--sans); font-size:.72rem; letter-spacing:.15em; text-transform:uppercase; cursor:pointer; display:inline-flex; align-items:center; gap:.4rem;">
+            <i class="bi bi-arrow-clockwise"></i> Actualizar
+          </button>
+        </div>
+
+        <!-- Cuadrícula de fotos -->
+        <div id="galeriaGrid" class="galeria-grid"></div>
+        <div id="galeriaEstado" class="galeria-estado">Cargando fotos del evento... ✨</div>
+
+        <!-- Paginador de la galería -->
+        <div id="galeriaPaginador" class="galeria-paginador" style="display:none;">
+          <button type="button" id="btnPagAnt" class="pag-btn" aria-label="Página anterior">
+            <i class="bi bi-chevron-left"></i> Anterior
+          </button>
+          <div id="pagNumeros" class="pag-numeros"></div>
+          <button type="button" id="btnPagSig" class="pag-btn" aria-label="Página siguiente">
+            Siguiente <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+        <div id="pagContador" class="pag-contador" style="display:none;"></div>
+
+        <!-- Botón para volver a la invitación principal -->
+        <div style="margin-top:3.5rem; padding-top:2rem; border-top:1px solid rgba(255,255,255,0.12);">
+          <a href="../" class="btn" style="font-size:0.75rem;">
+            <i class="bi bi-envelope-paper-heart me-1"></i> Ver la Invitación Completa
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Modal Visor Ampliado (Lightbox) -->
+    <div id="lightboxModal" class="lightbox-modal">
+      <button type="button" id="lightboxCerrar" class="lightbox-cerrar" aria-label="Cerrar visor">
+        <i class="bi bi-x-lg"></i>
+      </button>
+      <img id="lightboxImg" class="lightbox-img" src="" alt="Recuerdo de XV Keimar" />
+      <div class="lightbox-acciones">
+        <a id="lightboxDescargar" href="" target="_blank" download class="nav-link" style="font-size:0.72rem;">
+          <i class="bi bi-download me-1"></i> Abrir / Guardar Original
+        </a>
+      </div>
+    </div>
+
+    <script define:vars={{ apiGaleria: datos.apiGaleria }}>
+      // 📸 Lógica de la Galería y Paginación
+      const galeriaGrid = document.getElementById("galeriaGrid");
+      const galeriaEstado = document.getElementById("galeriaEstado");
+      const btnSubirFoto = document.getElementById("btnSubirFoto");
+      const btnIrSubir = document.getElementById("btnIrSubir");
+      const inputFoto = document.getElementById("inputFoto");
+      const inputAutor = document.getElementById("inputAutor");
+      const subiendoMsg = document.getElementById("subiendoMsg");
+      const subiendoTexto = document.getElementById("subiendoTexto");
+      const exitoMsg = document.getElementById("exitoMsg");
+      const btnRecargar = document.getElementById("btnRecargarGaleria");
+
+      // Lightbox
+      const lightboxModal = document.getElementById("lightboxModal");
+      const lightboxImg = document.getElementById("lightboxImg");
+      const lightboxDescargar = document.getElementById("lightboxDescargar");
+      const lightboxCerrar = document.getElementById("lightboxCerrar");
+
+      // Paginador
+      const paginadorContenedor = document.getElementById("galeriaPaginador");
+      const btnPagAnt = document.getElementById("btnPagAnt");
+      const btnPagSig = document.getElementById("btnPagSig");
+      const pagNumeros = document.getElementById("pagNumeros");
+      const pagContador = document.getElementById("pagContador");
+
+      let todasLasFotos = [];
+      let paginaActual = 1;
+      const FOTOS_POR_PAGINA = 12;
+
+      function comprimirImagen(file, maxDimension = 1400, quality = 0.82) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+              let width = img.width;
+              let height = img.height;
+              if (width > maxDimension || height > maxDimension) {
+                if (width > height) {
+                  height = Math.round((height * maxDimension) / width);
+                  width = maxDimension;
+                } else {
+                  width = Math.round((width * maxDimension) / height);
+                  height = maxDimension;
+                }
+              }
+              const canvas = document.createElement("canvas");
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext("2d");
+              ctx.drawImage(img, 0, 0, width, height);
+              const dataUrl = canvas.toDataURL("image/jpeg", quality);
+              const base64 = dataUrl.split(",")[1];
+              resolve(base64);
+            };
+            img.onerror = reject;
+            img.src = e.target.result;
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      async function cargarFotos() {
+        if (!apiGaleria) return;
+        try {
+          if (galeriaEstado && todasLasFotos.length === 0) {
+            galeriaEstado.style.display = "block";
+            galeriaEstado.textContent = "Actualizando recuerdos... ✨";
+          }
+          const res = await fetch(apiGaleria);
+          const data = await res.json();
+          if (data && data.status === "ok" && Array.isArray(data.photos)) {
+            todasLasFotos = data.photos;
+            actualizarVistaPagina();
+          } else if (galeriaEstado && todasLasFotos.length === 0) {
+            galeriaEstado.textContent = "No se pudieron sincronizar las fotos en este momento.";
+          }
+        } catch (err) {
+          if (galeriaEstado && todasLasFotos.length === 0) {
+            galeriaEstado.textContent = "No se pudieron sincronizar las fotos.";
+          }
+        }
+      }
+
+      function actualizarVistaPagina() {
+        if (!galeriaGrid) return;
+        galeriaGrid.innerHTML = "";
+
+        const total = todasLasFotos.length;
+        if (total === 0) {
+          if (galeriaEstado) {
+            galeriaEstado.style.display = "block";
+            galeriaEstado.textContent = "Aún no hay fotos. ¡Sé el primero en compartir un recuerdo! ✨";
+          }
+          if (paginadorContenedor) paginadorContenedor.style.display = "none";
+          if (pagContador) pagContador.style.display = "none";
+          return;
+        }
+
+        if (galeriaEstado) galeriaEstado.style.display = "none";
+
+        const totalPaginas = Math.ceil(total / FOTOS_POR_PAGINA);
+        if (paginaActual > totalPaginas) paginaActual = totalPaginas;
+        if (paginaActual < 1) paginaActual = 1;
+
+        const inicio = (paginaActual - 1) * FOTOS_POR_PAGINA;
+        const fin = Math.min(inicio + FOTOS_POR_PAGINA, total);
+        const fotosDePagina = todasLasFotos.slice(inicio, fin);
+
+        fotosDePagina.forEach((foto) => {
+          const item = document.createElement("div");
+          item.className = "galeria-item";
+          item.setAttribute("role", "button");
+          item.setAttribute("tabindex", "0");
+          item.title = "Toca para ampliar foto";
+          item.innerHTML = `
+            <img src="${foto.thumb || foto.url}" alt="Recuerdo XV Keimar" loading="lazy" />
+            ${foto.autor ? `<span class="autor-tag"><i class="bi bi-heart-fill me-1"></i>${foto.autor}</span>` : ""}
+          `;
+          item.addEventListener("click", () => {
+            if (lightboxImg && lightboxModal) {
+              lightboxImg.src = foto.url || foto.thumb;
+              if (lightboxDescargar) lightboxDescargar.href = foto.url || foto.thumb;
+              lightboxModal.classList.add("activo");
+            }
+          });
+          galeriaGrid.appendChild(item);
+        });
+
+        // Controles de paginador
+        if (totalPaginas <= 1) {
+          if (paginadorContenedor) paginadorContenedor.style.display = "none";
+          if (pagContador) {
+            pagContador.style.display = "block";
+            pagContador.textContent = `${total} ${total === 1 ? "recuerdo compartido" : "recuerdos compartidos"}`;
+          }
+          return;
+        }
+
+        if (paginadorContenedor) paginadorContenedor.style.display = "flex";
+        if (pagContador) {
+          pagContador.style.display = "block";
+          pagContador.textContent = `Mostrando ${inicio + 1}–${fin} de ${total} recuerdos`;
+        }
+
+        if (btnPagAnt) btnPagAnt.disabled = paginaActual === 1;
+        if (btnPagSig) btnPagSig.disabled = paginaActual === totalPaginas;
+
+        // Generar números de páginas
+        if (pagNumeros) {
+          pagNumeros.innerHTML = "";
+          for (let i = 1; i <= totalPaginas; i++) {
+            if (totalPaginas > 6 && Math.abs(i - paginaActual) > 2 && i !== 1 && i !== totalPaginas) {
+              if (i === 2 || i === totalPaginas - 1) {
+                const dots = document.createElement("span");
+                dots.textContent = "…";
+                dots.style.color = "var(--plata-suave)";
+                dots.style.padding = "0 3px";
+                pagNumeros.appendChild(dots);
+              }
+              continue;
+            }
+            const btnNum = document.createElement("button");
+            btnNum.type = "button";
+            btnNum.className = `pag-num ${i === paginaActual ? "activo" : ""}`;
+            btnNum.textContent = String(i);
+            btnNum.setAttribute("aria-label", `Ir a página ${i}`);
+            btnNum.addEventListener("click", () => irAPagina(i));
+            pagNumeros.appendChild(btnNum);
+          }
+        }
+      }
+
+      function irAPagina(num) {
+        paginaActual = num;
+        actualizarVistaPagina();
+        const rect = galeriaGrid.getBoundingClientRect();
+        if (rect.top < 0 || rect.top > 300) {
+          const offset = rect.top + window.scrollY - 100;
+          window.scrollTo({ top: offset, behavior: "smooth" });
+        }
+      }
+
+      btnPagAnt?.addEventListener("click", () => {
+        if (paginaActual > 1) irAPagina(paginaActual - 1);
+      });
+
+      btnPagSig?.addEventListener("click", () => {
+        const totalPaginas = Math.ceil(todasLasFotos.length / FOTOS_POR_PAGINA);
+        if (paginaActual < totalPaginas) irAPagina(paginaActual + 1);
+      });
+
+      // Disparador de archivo al pulsar botón
+      btnSubirFoto?.addEventListener("click", () => inputFoto?.click());
+      btnIrSubir?.addEventListener("click", () => {
+        inputFoto?.click();
+      });
+
+      inputFoto?.addEventListener("change", async (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+
+        try {
+          if (btnSubirFoto) btnSubirFoto.disabled = true;
+          if (subiendoMsg) subiendoMsg.style.display = "block";
+          if (subiendoTexto) subiendoTexto.textContent = "Optimizando foto... ⏳";
+
+          const base64 = await comprimirImagen(file);
+          if (subiendoTexto) subiendoTexto.textContent = "Guardando en el álbum oficial... 📸";
+
+          const autor = (inputAutor?.value || "").trim();
+          const payload = JSON.stringify({
+            base64: base64,
+            mimeType: "image/jpeg",
+            autor: autor
+          });
+
+          await fetch(apiGaleria, {
+            method: "POST",
+            body: payload
+          });
+
+          if (subiendoMsg) subiendoMsg.style.display = "none";
+          if (btnSubirFoto) btnSubirFoto.disabled = false;
+          if (inputFoto) inputFoto.value = "";
+          if (inputAutor) inputAutor.value = "";
+
+          if (exitoMsg) {
+            exitoMsg.style.display = "block";
+            setTimeout(() => { exitoMsg.style.display = "none"; }, 4000);
+          }
+
+          paginaActual = 1;
+          await cargarFotos();
+        } catch (err) {
+          if (subiendoMsg) subiendoMsg.style.display = "none";
+          if (btnSubirFoto) btnSubirFoto.disabled = false;
+          cargarFotos();
+        }
+      });
+
+      btnRecargar?.addEventListener("click", cargarFotos);
+
+      // Lightbox cerrar
+      lightboxCerrar?.addEventListener("click", () => lightboxModal?.classList.remove("activo"));
+      lightboxModal?.addEventListener("click", (e) => {
+        if (e.target === lightboxModal) lightboxModal.classList.remove("activo");
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") lightboxModal?.classList.remove("activo");
+      });
+
+      // Cargar fotos al inicio
+      cargarFotos();
+    </script>
+  </body>
+</html>

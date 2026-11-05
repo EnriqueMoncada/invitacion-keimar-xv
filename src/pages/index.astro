@@ -338,6 +338,46 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
         letter-spacing: 0.1em; color: var(--plata-suave);
         padding: 1.5rem 0; text-align: center;
       }
+      /* Paginador de la galería */
+      .galeria-paginador {
+        display: flex; align-items: center; justify-content: center;
+        gap: 0.5rem; margin-top: 1.8rem; flex-wrap: wrap;
+      }
+      .pag-btn {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--plata); background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        padding: 0.45rem 1rem; border-radius: 999px; cursor: pointer;
+        transition: all 0.25s ease;
+      }
+      .pag-btn:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.16); color: var(--brillo);
+        box-shadow: 0 0 14px rgba(255, 255, 255, 0.25); transform: translateY(-2px);
+      }
+      .pag-btn:disabled {
+        opacity: 0.35; cursor: not-allowed; transform: none !important;
+      }
+      .pag-numeros { display: flex; gap: 0.35rem; align-items: center; }
+      .pag-num {
+        width: 34px; height: 34px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-family: var(--sans); font-size: 0.78rem; font-weight: 500;
+        color: var(--plata-suave); background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        cursor: pointer; transition: all 0.25s ease;
+      }
+      .pag-num:hover { color: #fff; background: rgba(255, 255, 255, 0.15); }
+      .pag-num.activo {
+        color: #fff;
+        background: linear-gradient(135deg, rgba(233, 214, 255, 0.35), rgba(150, 95, 255, 0.4));
+        border-color: #e9d6ff; box-shadow: 0 0 16px rgba(190, 140, 255, 0.6);
+        font-weight: 600;
+      }
+      .pag-contador {
+        font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.15em;
+        text-transform: uppercase; color: var(--plata-suave); margin-top: 0.9rem; text-align: center;
+      }
       /* Visor ampliado (Lightbox) */
       .lightbox-modal {
         position: fixed; inset: 0; z-index: 99;
@@ -1048,6 +1088,24 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
           <!-- Cuadrícula de fotos -->
           <div id="galeriaGrid" class="galeria-grid"></div>
           <div id="galeriaEstado" class="galeria-estado">Cargando fotos del evento... ✨</div>
+
+          <!-- Paginador de la galería -->
+          <div id="galeriaPaginador" class="galeria-paginador" style="display:none;">
+            <button type="button" id="btnPagAnt" class="pag-btn" aria-label="Página anterior">
+              <i class="bi bi-chevron-left"></i> Anterior
+            </button>
+            <div id="pagNumeros" class="pag-numeros"></div>
+            <button type="button" id="btnPagSig" class="pag-btn" aria-label="Página siguiente">
+              Siguiente <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
+          <div id="pagContador" class="pag-contador" style="display:none;"></div>
+
+          <div style="margin-top:2.2rem;">
+            <a href="fotos" class="btn" style="font-size:0.75rem;">
+              <i class="bi bi-box-arrow-up-right me-1"></i> Abrir Muro de Fotos Completo 📸
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -1218,6 +1276,17 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
       const lightboxImg = document.getElementById("lightboxImg");
       const lightboxCerrar = document.getElementById("lightboxCerrar");
 
+      // Paginación
+      const paginadorContenedor = document.getElementById("galeriaPaginador");
+      const btnPagAnt = document.getElementById("btnPagAnt");
+      const btnPagSig = document.getElementById("btnPagSig");
+      const pagNumeros = document.getElementById("pagNumeros");
+      const pagContador = document.getElementById("pagContador");
+
+      let todasLasFotos = [];
+      let paginaActual = 1;
+      const FOTOS_POR_PAGINA = 12;
+
       function comprimirImagen(file, maxDimension = 1400, quality = 0.82) {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -1255,34 +1324,51 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
       async function cargarFotos() {
         if (!apiGaleria) return;
         try {
-          if (galeriaEstado) {
+          if (galeriaEstado && todasLasFotos.length === 0) {
             galeriaEstado.style.display = "block";
             galeriaEstado.textContent = "Actualizando recuerdos... ✨";
           }
           const res = await fetch(apiGaleria);
           const data = await res.json();
           if (data && data.status === "ok" && Array.isArray(data.photos)) {
-            renderizarFotos(data.photos);
-          } else if (galeriaEstado) {
+            todasLasFotos = data.photos;
+            actualizarVistaPagina();
+          } else if (galeriaEstado && todasLasFotos.length === 0) {
             galeriaEstado.textContent = "No se pudieron sincronizar las fotos en este momento.";
           }
         } catch (err) {
-          if (galeriaEstado) galeriaEstado.textContent = "No se pudieron sincronizar las fotos.";
+          if (galeriaEstado && todasLasFotos.length === 0) {
+            galeriaEstado.textContent = "No se pudieron sincronizar las fotos.";
+          }
         }
       }
 
-      function renderizarFotos(photos) {
+      function actualizarVistaPagina() {
         if (!galeriaGrid) return;
         galeriaGrid.innerHTML = "";
-        if (!photos || photos.length === 0) {
+
+        const total = todasLasFotos.length;
+        if (total === 0) {
           if (galeriaEstado) {
             galeriaEstado.style.display = "block";
             galeriaEstado.textContent = "Aún no hay fotos. ¡Sé el primero en compartir un recuerdo! ✨";
           }
+          if (paginadorContenedor) paginadorContenedor.style.display = "none";
+          if (pagContador) pagContador.style.display = "none";
           return;
         }
+
         if (galeriaEstado) galeriaEstado.style.display = "none";
-        photos.forEach((foto) => {
+
+        const totalPaginas = Math.ceil(total / FOTOS_POR_PAGINA);
+        if (paginaActual > totalPaginas) paginaActual = totalPaginas;
+        if (paginaActual < 1) paginaActual = 1;
+
+        const inicio = (paginaActual - 1) * FOTOS_POR_PAGINA;
+        const fin = Math.min(inicio + FOTOS_POR_PAGINA, total);
+        const fotosDePagina = todasLasFotos.slice(inicio, fin);
+
+        fotosDePagina.forEach((foto) => {
           const item = document.createElement("div");
           item.className = "galeria-item";
           item.setAttribute("role", "button");
@@ -1300,7 +1386,69 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
           });
           galeriaGrid.appendChild(item);
         });
+
+        // Controles de paginador
+        if (totalPaginas <= 1) {
+          if (paginadorContenedor) paginadorContenedor.style.display = "none";
+          if (pagContador) {
+            pagContador.style.display = "block";
+            pagContador.textContent = `${total} ${total === 1 ? "recuerdo compartido" : "recuerdos compartidos"}`;
+          }
+          return;
+        }
+
+        if (paginadorContenedor) paginadorContenedor.style.display = "flex";
+        if (pagContador) {
+          pagContador.style.display = "block";
+          pagContador.textContent = `Mostrando ${inicio + 1}–${fin} de ${total} recuerdos`;
+        }
+
+        if (btnPagAnt) btnPagAnt.disabled = paginaActual === 1;
+        if (btnPagSig) btnPagSig.disabled = paginaActual === totalPaginas;
+
+        // Generar números de páginas
+        if (pagNumeros) {
+          pagNumeros.innerHTML = "";
+          for (let i = 1; i <= totalPaginas; i++) {
+            if (totalPaginas > 6 && Math.abs(i - paginaActual) > 2 && i !== 1 && i !== totalPaginas) {
+              if (i === 2 || i === totalPaginas - 1) {
+                const dots = document.createElement("span");
+                dots.textContent = "…";
+                dots.style.color = "var(--plata-suave)";
+                dots.style.padding = "0 3px";
+                pagNumeros.appendChild(dots);
+              }
+              continue;
+            }
+            const btnNum = document.createElement("button");
+            btnNum.type = "button";
+            btnNum.className = `pag-num ${i === paginaActual ? "activo" : ""}`;
+            btnNum.textContent = String(i);
+            btnNum.setAttribute("aria-label", `Ir a página ${i}`);
+            btnNum.addEventListener("click", () => irAPagina(i));
+            pagNumeros.appendChild(btnNum);
+          }
+        }
       }
+
+      function irAPagina(num) {
+        paginaActual = num;
+        actualizarVistaPagina();
+        const rect = galeriaGrid.getBoundingClientRect();
+        if (rect.top < 0 || rect.top > 300) {
+          const offset = rect.top + window.scrollY - 100;
+          window.scrollTo({ top: offset, behavior: "smooth" });
+        }
+      }
+
+      btnPagAnt?.addEventListener("click", () => {
+        if (paginaActual > 1) irAPagina(paginaActual - 1);
+      });
+
+      btnPagSig?.addEventListener("click", () => {
+        const totalPaginas = Math.ceil(todasLasFotos.length / FOTOS_POR_PAGINA);
+        if (paginaActual < totalPaginas) irAPagina(paginaActual + 1);
+      });
 
       // Disparador de archivo al pulsar botón
       btnSubirFoto?.addEventListener("click", () => inputFoto?.click());
@@ -1339,7 +1487,8 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
             setTimeout(() => { exitoMsg.style.display = "none"; }, 4000);
           }
 
-          // Recargar galería con la nueva foto
+          // Recargar galería con la nueva foto en la página 1
+          paginaActual = 1;
           await cargarFotos();
         } catch (err) {
           if (subiendoMsg) subiendoMsg.style.display = "none";
