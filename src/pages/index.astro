@@ -783,7 +783,7 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
 
       <div style="position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; padding: 4rem 1.4rem 6rem;">
         <img src={datos.logoXv} alt="Mis XV Años" draggable="false"
-          style="width: min(230px, 56vw); border-radius: 24px; box-shadow: 0 0 40px rgba(255,255,255,0.22); margin-bottom: 2.6rem;" />
+          style="width: min(240px, 58vw); mix-blend-mode: screen; filter: drop-shadow(0 0 20px rgba(190,140,255,0.45)); margin: 0 auto 2.4rem; display: block;" />
 
         <p class="overline reveal visible" style="margin-bottom:1rem;">Mis XV años</p>
         <h1 class="neon" style="font-size: clamp(2.6rem, 11vw, 5.4rem); line-height: 1.15; font-weight: 400;">
@@ -1058,14 +1058,14 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
         <!-- Zona para subir fotos -->
         <div class="galeria-box">
           <div class="upload-container">
-            <input type="file" id="inputFoto" accept="image/*" style="display:none;" />
+            <input type="file" id="inputFoto" accept="image/*" multiple style="display:none;" />
             <input type="text" id="inputAutor" class="input-autor" placeholder="Tu nombre o dedicatoria (opcional)" maxlength="40" />
 
             <button type="button" class="btn relleno" id="btnSubirFoto" style="color:#0a0a0a;">
-              <i class="bi bi-camera-fill me-1"></i> Subir Foto / Tomar Foto
+              <i class="bi bi-images me-1"></i> Subir Fotos / Tomar Foto
             </button>
             <small style="font-family:var(--sans); font-size:.68rem; letter-spacing:.12em; color:var(--plata-suave);">
-              Las fotos se guardan en el álbum oficial del evento ✨
+              Puedes seleccionar varias fotos a la vez ✨
             </small>
 
             <!-- Mensaje de estado al subir -->
@@ -1454,28 +1454,46 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
       btnSubirFoto?.addEventListener("click", () => inputFoto?.click());
 
       inputFoto?.addEventListener("change", async (e) => {
-        const file = e.target.files && e.target.files[0];
-        if (!file) return;
+        const files = Array.from(e.target.files || []);
+        if (files.length === 0) return;
+
+        const totalArchivos = files.length;
+        const autor = (inputAutor?.value || "").trim();
 
         try {
           if (btnSubirFoto) btnSubirFoto.disabled = true;
           if (subiendoMsg) subiendoMsg.style.display = "block";
-          if (subiendoTexto) subiendoTexto.textContent = "Optimizando foto... ⏳";
 
-          const base64 = await comprimirImagen(file);
-          if (subiendoTexto) subiendoTexto.textContent = "Guardando en el álbum oficial... 📸";
+          let subidasConExito = 0;
 
-          const autor = (inputAutor?.value || "").trim();
-          const payload = JSON.stringify({
-            base64: base64,
-            mimeType: "image/jpeg",
-            autor: autor
-          });
+          // Procesar archivos en cola secuencial
+          for (let i = 0; i < totalArchivos; i++) {
+            const file = files[i];
+            const num = i + 1;
 
-          await fetch(apiGaleria, {
-            method: "POST",
-            body: payload
-          });
+            if (subiendoTexto) {
+              subiendoTexto.textContent = totalArchivos > 1
+                ? `Optimizando y subiendo ${num} de ${totalArchivos}... 📸`
+                : "Optimizando y guardando recuerdo... 📸";
+            }
+
+            try {
+              const base64 = await comprimirImagen(file);
+              const payload = JSON.stringify({
+                base64: base64,
+                mimeType: "image/jpeg",
+                autor: autor
+              });
+
+              await fetch(apiGaleria, {
+                method: "POST",
+                body: payload
+              });
+              subidasConExito++;
+            } catch (errArchivo) {
+              console.error("Error subiendo foto " + num, errArchivo);
+            }
+          }
 
           if (subiendoMsg) subiendoMsg.style.display = "none";
           if (btnSubirFoto) btnSubirFoto.disabled = false;
@@ -1483,11 +1501,14 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
           if (inputAutor) inputAutor.value = "";
 
           if (exitoMsg) {
+            exitoMsg.textContent = totalArchivos > 1
+              ? `¡${subidasConExito} de ${totalArchivos} fotos compartidas con éxito! 🎉`
+              : "¡Foto compartida con éxito! Ya aparece en el muro. 🎉";
             exitoMsg.style.display = "block";
-            setTimeout(() => { exitoMsg.style.display = "none"; }, 4000);
+            setTimeout(() => { exitoMsg.style.display = "none"; }, 5000);
           }
 
-          // Recargar galería con la nueva foto en la página 1
+          // Recargar galería con las nuevas fotos en la página 1
           paginaActual = 1;
           await cargarFotos();
         } catch (err) {

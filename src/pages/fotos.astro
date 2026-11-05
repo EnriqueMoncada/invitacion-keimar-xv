@@ -337,14 +337,14 @@ const datos = {
 
         <!-- Zona para subir fotos -->
         <div class="upload-container" id="zonaSubida">
-          <input type="file" id="inputFoto" accept="image/*" style="display:none;" />
+          <input type="file" id="inputFoto" accept="image/*" multiple style="display:none;" />
           <input type="text" id="inputAutor" class="input-autor" placeholder="Tu nombre o dedicatoria (opcional)" maxlength="40" />
 
           <button type="button" class="btn relleno" id="btnSubirFoto" style="color:#0a0a0a;">
-            <i class="bi bi-camera-fill me-1"></i> Tomar o Subir Foto
+            <i class="bi bi-images me-1"></i> Tomar o Subir Fotos
           </button>
           <small style="font-family:var(--sans); font-size:.7rem; letter-spacing:.12em; color:var(--plata-suave);">
-            Las fotos se sincronizan directamente con el álbum oficial ✨
+            Puedes seleccionar varias fotos a la vez ✨
           </small>
 
           <!-- Mensajes de estado -->
@@ -603,28 +603,46 @@ const datos = {
       });
 
       inputFoto?.addEventListener("change", async (e) => {
-        const file = e.target.files && e.target.files[0];
-        if (!file) return;
+        const files = Array.from(e.target.files || []);
+        if (files.length === 0) return;
+
+        const totalArchivos = files.length;
+        const autor = (inputAutor?.value || "").trim();
 
         try {
           if (btnSubirFoto) btnSubirFoto.disabled = true;
           if (subiendoMsg) subiendoMsg.style.display = "block";
-          if (subiendoTexto) subiendoTexto.textContent = "Optimizando foto... ⏳";
 
-          const base64 = await comprimirImagen(file);
-          if (subiendoTexto) subiendoTexto.textContent = "Guardando en el álbum oficial... 📸";
+          let subidasConExito = 0;
 
-          const autor = (inputAutor?.value || "").trim();
-          const payload = JSON.stringify({
-            base64: base64,
-            mimeType: "image/jpeg",
-            autor: autor
-          });
+          // Procesar archivos en cola secuencial
+          for (let i = 0; i < totalArchivos; i++) {
+            const file = files[i];
+            const num = i + 1;
 
-          await fetch(apiGaleria, {
-            method: "POST",
-            body: payload
-          });
+            if (subiendoTexto) {
+              subiendoTexto.textContent = totalArchivos > 1
+                ? `Optimizando y subiendo ${num} de ${totalArchivos}... 📸`
+                : "Optimizando y guardando recuerdo... 📸";
+            }
+
+            try {
+              const base64 = await comprimirImagen(file);
+              const payload = JSON.stringify({
+                base64: base64,
+                mimeType: "image/jpeg",
+                autor: autor
+              });
+
+              await fetch(apiGaleria, {
+                method: "POST",
+                body: payload
+              });
+              subidasConExito++;
+            } catch (errArchivo) {
+              console.error("Error subiendo foto " + num, errArchivo);
+            }
+          }
 
           if (subiendoMsg) subiendoMsg.style.display = "none";
           if (btnSubirFoto) btnSubirFoto.disabled = false;
@@ -632,8 +650,11 @@ const datos = {
           if (inputAutor) inputAutor.value = "";
 
           if (exitoMsg) {
+            exitoMsg.textContent = totalArchivos > 1
+              ? `¡${subidasConExito} de ${totalArchivos} fotos compartidas con éxito! 🎉`
+              : "¡Foto compartida con éxito! Ya puedes verla en el muro. 🎉";
             exitoMsg.style.display = "block";
-            setTimeout(() => { exitoMsg.style.display = "none"; }, 4000);
+            setTimeout(() => { exitoMsg.style.display = "none"; }, 5000);
           }
 
           paginaActual = 1;
