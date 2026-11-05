@@ -38,7 +38,6 @@ const datos = {
     banco: "Banco Nacional de Crédito", // ✏️ EDITAR banco
     telefono: "0412-9925222", // ✏️ EDITAR teléfono de pago
     cedula: "V-18.910.619", // ✏️ EDITAR cédula
-    titular: "Fernando", // ✏️ EDITAR titular
   },
 
   /* Rutas de assets (en /public/assets/) */
@@ -797,9 +796,9 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
             <h3>Para Ellos</h3>
             <span class="vest-badge">Caballeros & Invitados</span>
             <ul class="vest-lista">
-              <li><i class="bi bi-check-circle-fill"></i><span><strong>Traje o blazer:</strong> saco semi-formal.</span></li>
+              <li><i class="bi bi-check-circle-fill"></i><span><strong>Blazer:</strong> saco semi formal </span></li>
               <li><i class="bi bi-check-circle-fill"></i><span><strong>Camisa & pantalón:</strong> camisa de vestir con pantalón elegante o Camisa de vestir con pantalón casual.</span></li>
-              <li><i class="bi bi-check-circle-fill"></i><span><strong>Calzado:</strong> zapatos de vestir o casual; corbata o pajarita opcional.</span></li>
+              <li><i class="bi bi-check-circle-fill"></i><span><strong>Calzado:</strong>  zapatos de vestir o casual</span></li>
             </ul>
             <p class="sub-mensaje"><i class="bi bi-suit-club-fill me-1"></i> Estilo pulcro y sofisticado.</p>
           </div>
@@ -843,10 +842,9 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
               <div class="fila"><small>BANCO:</small><span>{datos.pagoMovil.banco}</span></div>
               <div class="fila"><small>TELÉFONO:</small><span>{datos.pagoMovil.telefono}</span></div>
               <div class="fila"><small>CÉDULA:</small><span>{datos.pagoMovil.cedula}</span></div>
-              <div class="fila"><small>TITULAR:</small><span>{datos.pagoMovil.titular}</span></div>
             </div>
             <button type="button" class="btn relleno" id="copiarDatos"
-              data-bank-info={`Banco: ${datos.pagoMovil.banco} | Teléfono: ${datos.pagoMovil.telefono} | Cédula: ${datos.pagoMovil.cedula} | Titular: ${datos.pagoMovil.titular}`}
+              data-bank-info={`Banco: ${datos.pagoMovil.banco} | Teléfono: ${datos.pagoMovil.telefono} | Cédula: ${datos.pagoMovil.cedula}`}
               style="width:100%; color:#0a0a0a; font-size:.68rem;">
               <i class="bi bi-clipboard-check me-1"></i> Copiar Datos de Pago
             </button>
