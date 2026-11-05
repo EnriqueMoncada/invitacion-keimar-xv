@@ -782,8 +782,10 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
       <div style="position:absolute; inset:0; background: radial-gradient(ellipse at 50% 55%, rgba(20,16,24,0.22), rgba(20,16,24,0.8) 78%);"></div>
 
       <div style="position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; padding: 4rem 1.4rem 6rem;">
-        <img src={datos.logoXv} alt="Mis XV Años" draggable="false"
-          style="width: min(210px, 52vw); height: auto; display: block; margin: 0 auto 2rem; filter: drop-shadow(0 0 25px rgba(233,214,255,0.45));" />
+        <div style="width: min(205px, 52vw); aspect-ratio: 1 / 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2.4rem; padding: 12px; border: 2px solid rgba(255, 255, 255, 0.45); background: radial-gradient(circle, rgba(36, 29, 44, 0.65) 0%, rgba(20, 16, 24, 0.88) 100%); box-shadow: 0 0 28px rgba(190, 140, 255, 0.35), inset 0 0 16px rgba(255, 255, 255, 0.1); backdrop-filter: blur(6px);">
+          <img src={datos.logoXv} alt="Mis XV Años" draggable="false"
+            style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 12px rgba(255,255,255,0.4));" />
+        </div>
 
         <p class="overline reveal visible" style="margin-bottom:1rem;">Mis XV años</p>
         <h1 class="neon" style="font-size: clamp(2.6rem, 11vw, 5.4rem); line-height: 1.15; font-weight: 400;">
