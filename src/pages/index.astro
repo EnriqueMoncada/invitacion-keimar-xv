@@ -61,7 +61,7 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#141018" />
     <title>{datos.nombre} — Mis XV Años ✨</title>
-    <meta name="description" content={`Invitación a los XV años de ${datos.nombre} · ${datos.fechaNumerica} · ${datos.lugar}`} />
+    <meta name="description" content={`Invitación a los XV años de ${datos.nombre} · ${datos.fechaNumerica} · ${datos.horaTexto} · ${datos.lugar}`} />
 
     <!-- Iconos (los mismos de tu página de Edgary) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
@@ -549,7 +549,7 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
           <h3 class="titulo">Mis XV Años</h3>
           <p class="nombre">{datos.nombre}</p>
           <div class="regla"></div>
-          <span class="fecha-pill">✨ {datos.fechaTexto} {datos.fechaNumerica} ✨</span>
+          <span class="fecha-pill">✨ {datos.fechaTexto} {datos.fechaNumerica} · {datos.horaTexto} ✨</span>
           <button type="button" class="cartita-cta" id="ctaEntrar">
             <span>Toca para ver la invitación principal</span> <i class="bi bi-arrow-right"></i>
           </button>
@@ -636,7 +636,12 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
         <p style="font-family:var(--sans); font-weight:300; letter-spacing:.45em; text-transform:uppercase; font-size:.85rem; color:var(--brillo); text-shadow:0 0 12px rgba(255,255,255,.6);">
           {datos.fechaTexto}
         </p>
-        <p style="font-family:var(--serif); font-size:1.25rem; color:var(--plata); margin-top:.5rem;">{datos.fechaNumerica}</p>
+        <p style="font-family:var(--serif); font-size:1.25rem; color:var(--plata); margin-top:.5rem;">
+          {datos.fechaNumerica}
+        </p>
+        <p style="font-family:var(--sans); font-weight:400; letter-spacing:.25em; text-transform:uppercase; font-size:.9rem; color:#e9d6ff; text-shadow:0 0 12px rgba(150,95,255,.6); margin-top:.4rem;">
+          <i class="bi bi-clock me-1"></i> {datos.horaTexto}
+        </p>
 
         <!--Foto de Keimar: se muestra apenas la suba a /assets/keimar.jpg -->
         <div id="fotoWrap" class="reveal" style="margin-top:3rem; display:none;">
@@ -719,7 +724,11 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
           {datos.direccion}
         </p>
 
-        <a href={datos.mapsUrl} target="_blank" rel="noopener" class="btn relleno reveal" style="margin-top:2.2rem; color:#0a0a0a;">Ver ubicación 📍</a>
+        <div class="reveal" style="margin-top:1.4rem; display:inline-flex; align-items:center; gap:.5rem; padding:.45rem 1.2rem; border-radius:999px; border:1px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.06); font-family:var(--sans); font-size:.82rem; letter-spacing:.15em; text-transform:uppercase; color:var(--brillo); text-shadow:0 0 10px rgba(255,255,255,.4);">
+          <i class="bi bi-clock me-1" style="color:#e9d6ff;"></i> {datos.fechaTexto} {datos.fechaNumerica} &nbsp;·&nbsp; {datos.horaTexto}
+        </div>
+
+        <a href={datos.mapsUrl} target="_blank" rel="noopener" class="btn relleno reveal" style="margin-top:2rem; color:#0a0a0a;">Ver ubicación 📍</a>
 
         <p class="script reveal" style="font-size:1.7rem; margin-top:2.6rem; color:var(--plata); text-shadow:0 0 14px rgba(255,255,255,.4);">
           ¡No faltes!
@@ -739,9 +748,15 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
         <div class="linea reveal"></div>
         <p class="overline reveal">Con la bendición de Dios y de mis padres</p>
         <img src="assets/corona.png" alt="" aria-hidden="true" class="corona-sello" />
-        <h3 class="reveal" style="margin-top:1.6rem; font-size:1.6rem; font-weight:600; color:#e9d6ff; text-shadow:0 0 18px rgba(150,95,255,.55);">{datos.padres[0]}</h3>
-        <p class="reveal" style="color:var(--plata-suave); margin:.2rem 0;">&</p>
-        <h3 class="reveal" style="font-size:1.6rem; font-weight:600; color:#e9d6ff; text-shadow:0 0 18px rgba(150,95,255,.55);">{datos.padres[1]}</h3>
+        <h3 class="reveal script" style="margin-top:1.4rem; font-size:clamp(2.4rem, 8vw, 3.4rem); font-weight:400; color:#f0e3ff; text-shadow:0 0 20px rgba(150,95,255,.6); line-height:1.2;">
+          {datos.padres[0]}
+        </h3>
+        <p class="reveal script" style="font-size:clamp(1.8rem, 6vw, 2.6rem); color:var(--plata-suave); margin:.1rem 0; line-height:1;">
+          &
+        </p>
+        <h3 class="reveal script" style="font-size:clamp(2.4rem, 8vw, 3.4rem); font-weight:400; color:#f0e3ff; text-shadow:0 0 20px rgba(150,95,255,.6); line-height:1.2;">
+          {datos.padres[1]}
+        </h3>
       </div>
     </section>
 
