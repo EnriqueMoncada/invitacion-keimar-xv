@@ -431,33 +431,31 @@ const whatsappUrl = `https://wa.me/${datos.whatsapp}?text=${encodeURIComponent(d
           <!-- Lazo de raso (adaptado al tema) -->
           <div class="sobre-lazo" style="width:124px;">            <!-- Cinta horizontal -->
             <div style="position:absolute; left:-10px; right:-10px; top:18px; height:20px; border-radius:4px;
-                        background:linear-gradient(90deg, #241d2c, #4a3c55, #241d2c);
-                        border-top:1.5px solid rgba(255,255,255,.85); border-bottom:1.5px solid rgba(255,255,255,.85);
-                        box-shadow:0 0 12px rgba(255,255,255,.35);"></div>
+                        background:linear-gradient(90deg, #241d2c, #8f7fa5 35%, #f2eef6 50%, #8f7fa5 65%, #241d2c);
+                        border-top:1.5px solid rgba(255,255,255,.9); border-bottom:1.5px solid rgba(255,255,255,.9);
+                        box-shadow:0 0 14px rgba(255,255,255,.45);"></div>
             <!-- Lazo -->
             <svg width="100%" viewBox="0 0 260 140" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
               <defs>
-                <linearGradient id="rasoIzq" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#e8e8ec" />
-                  <stop offset="50%" stop-color="#6a577a" />
+                <linearGradient id="lazoPlata" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#f5f2fa" />
+                  <stop offset="35%" stop-color="#c3b3d6" />
+                  <stop offset="70%" stop-color="#6a577a" />
                   <stop offset="100%" stop-color="#2e2536" />
                 </linearGradient>
-                <linearGradient id="rasoDer" x1="100%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#e8e8ec" />
-                  <stop offset="50%" stop-color="#6a577a" />
-                  <stop offset="100%" stop-color="#2e2536" />
-                </linearGradient>
-                <linearGradient id="rasoCola" x1="0%" y1="0%" x2="0%" y2="100%">
+                <linearGradient id="lazoPlataOscuro" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stop-color="#9c86ac" />
-                  <stop offset="100%" stop-color="#241d2c" />
+                  <stop offset="60%" stop-color="#4a3c55" />
+                  <stop offset="100%" stop-color="#191420" />
                 </linearGradient>
               </defs>
-              <path d="M120 65 C110 85 75 115 55 138 L82 130 L98 140 C108 115 118 90 122 65 Z" fill="url(#rasoCola)" stroke="#ffffff" stroke-width="1.4" opacity="0.95" />
-              <path d="M140 65 C150 85 185 115 205 138 L178 130 L162 140 C152 115 142 90 138 65 Z" fill="url(#rasoCola)" stroke="#ffffff" stroke-width="1.4" opacity="0.95" />
-              <path d="M130 60 C98 28 25 25 15 55 C5 82 82 92 130 68 Z" fill="url(#rasoIzq)" stroke="#ffffff" stroke-width="1.6" />
-              <path d="M130 60 C162 28 235 25 245 55 C255 82 178 92 130 68 Z" fill="url(#rasoDer)" stroke="#ffffff" stroke-width="1.6" />
-              <path d="M130 60 C105 42 45 38 35 58 C48 68 100 75 130 68 Z" fill="#150f1a" opacity="0.4" />
-              <path d="M130 60 C155 42 215 38 225 58 C212 68 160 75 130 68 Z" fill="#150f1a" opacity="0.4" />
+              <path d="M120 65 C110 85 75 115 55 138 L82 130 L98 140 C108 115 118 90 122 65 Z" fill="url(#lazoPlataOscuro)" stroke="#ffffff" stroke-width="1.4" opacity="0.95" />
+              <path d="M140 65 C150 85 185 115 205 138 L178 130 L162 140 C152 115 142 90 138 65 Z" fill="url(#lazoPlataOscuro)" stroke="#ffffff" stroke-width="1.4" opacity="0.95" />
+              <path d="M130 60 C98 28 25 25 15 55 C5 84 82 94 130 68 Z" fill="url(#lazoPlata)" stroke="#ffffff" stroke-width="1.8" />
+              <path d="M130 60 C162 28 235 25 245 55 C255 84 178 94 130 68 Z" fill="url(#lazoPlata)" stroke="#ffffff" stroke-width="1.8" />
+              <path d="M130 60 C105 40 45 36 35 56 C46 66 100 74 130 68 Z" fill="#150f1a" opacity="0.45" />
+              <path d="M130 60 C155 40 215 36 225 56 C214 66 160 74 130 68 Z" fill="#150f1a" opacity="0.45" />
+              <ellipse cx="130" cy="61" rx="17" ry="13" fill="url(#lazoPlata)" stroke="#ffffff" stroke-width="1.8" />
             </svg>
           </div>
         </div>
